@@ -44,6 +44,15 @@ TagManager:
   - name: Default
     uniqueID: 3363470833
     locked: 0
+  - name: Background
+    uniqueID: 903909881
+    locked: 0
+  - name: Hazards
+    uniqueID: 1991338155
+    locked: 0
+  - name: Foreground
+    uniqueID: 2577431547
+    locked: 0
   - name: UI
     uniqueID: 1985630415
     locked: 0
