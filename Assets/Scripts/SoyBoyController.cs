@@ -41,7 +41,11 @@ public class SoyBoyController : MonoBehaviour
     public float jumpDurationThreshold = 0.25f;
     public float airAccel = 3f;
     public float jump = 14f;
+    public AudioClip runClip;
+    public AudioClip jumpClip;
+    public AudioClip slideClip;
 
+    private AudioSource audioSource;
     private Vector2 input;
     private SpriteRenderer sr;
     private Rigidbody2D rb;
@@ -58,6 +62,7 @@ public class SoyBoyController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         width = GetComponent<Collider2D>().bounds.extents.x + 0.1f;
         height = GetComponent<Collider2D>().bounds.extents.y + 0.2f;
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Use this for initialization
@@ -65,6 +70,15 @@ public class SoyBoyController : MonoBehaviour
     {
 
     }
+
+    void PlayAudioClip(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            if (!audioSource.isPlaying) audioSource.PlayOneShot(clip);
+        }
+    }
+
     public bool PlayerIsOnGround()
     {
         // 1
@@ -172,14 +186,18 @@ public class SoyBoyController : MonoBehaviour
             jumpDuration = 0f;
         }
         //
-        if (PlayerIsOnGround() && isJumping == false)
+        if (PlayerIsOnGround() && !isJumping)
         {
-           if (input.y > 0f)
-           {
-                    isJumping = true;
-           }
-
-           animator.SetBool("IsOnWall", false);
+            if (input.y > 0f)
+            {
+                isJumping = true;
+                PlayAudioClip(jumpClip);
+            }
+            animator.SetBool("IsOnWall", false);
+            if (input.x < 0f || input.x > 0f)
+            {
+                PlayAudioClip(runClip);
+            }
         }
 
         if (jumpDuration > jumpDurationThreshold) input.y = 0f;
@@ -226,6 +244,7 @@ public class SoyBoyController : MonoBehaviour
             * 0.75f, rb.velocity.y);
             animator.SetBool("IsOnWall", false);
             animator.SetBool("IsJumping", true);
+            PlayAudioClip(jumpClip);
         }
         else if (!IsWallToLeftOrRight())
         {
@@ -235,6 +254,7 @@ public class SoyBoyController : MonoBehaviour
         if (IsWallToLeftOrRight() && !PlayerIsOnGround())
         {
             animator.SetBool("IsOnWall", true);
+            PlayAudioClip(slideClip);
         }
 
         if (isJumping && jumpDuration < jumpDurationThreshold)
