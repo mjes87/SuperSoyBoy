@@ -35,7 +35,7 @@ public class CameraLerpToTransform : MonoBehaviour
 {
     public Transform camTarget;
     public float trackingSpeed;
-    public float cameraZDepth = -10f;
+	public float cameraZDepth = -10f;
     public float minX;
     public float minY;
     public float maxX;
