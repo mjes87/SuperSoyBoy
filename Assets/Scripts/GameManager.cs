@@ -193,17 +193,21 @@ public class GameManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update () {
-	
-	}
-
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("Menu");
+        }
+    }
     public List<PlayerTimeEntry> LoadPreviousTimes()
     {
         // 1
         try
         {
+            var levelName = Path.GetFileName(selectedLevel);
             var scoresFile = Application.persistentDataPath +
-            "/" + playerName + "_times.dat";
+            "/" + playerName + "_" + levelName + "_times.dat";
             using (var stream = File.Open(scoresFile, FileMode.Open))
             {
                 var bin = new BinaryFormatter();
@@ -229,8 +233,10 @@ public class GameManager : MonoBehaviour
         newTime.time = time;
         // 5
         var bFormatter = new BinaryFormatter();
+        var levelName = Path.GetFileName(selectedLevel);
         var filePath = Application.persistentDataPath +
-        "/" + playerName + "_times.dat";
+        "/" + playerName + "_" + levelName + "_times.dat";
+
         using (var file = File.Open(filePath, FileMode.Create))
         {
             times.Add(newTime);
@@ -240,18 +246,21 @@ public class GameManager : MonoBehaviour
 
     public void DisplayPreviousTimes()
     {
-        // 1
         var times = LoadPreviousTimes();
+        var levelName = Path.GetFileName(selectedLevel);
+        if (levelName != null)
+        {
+            levelName = levelName.Replace(".json", "");
+        }
         var topThree = times.OrderBy(time => time.time).Take(3);
-        // 2
         var timesLabel = GameObject.Find("PreviousTimes")
         .GetComponent<Text>();
-        // 3
-        timesLabel.text = "BEST TIMES \n";
+        timesLabel.text = levelName + "\n";
+        timesLabel.text += "BEST TIMES \n";
         foreach (var time in topThree)
         {
-            timesLabel.text += time.entryDate.ToShortDateString() +
-            ": " + time.time + "\n";
+            timesLabel.text += time.entryDate.ToShortDateString()
+            + ": " + time.time + "\n";
         }
     }
 
