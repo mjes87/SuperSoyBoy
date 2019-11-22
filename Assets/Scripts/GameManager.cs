@@ -34,6 +34,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public string playerName;
     public static GameManager instance;
 
     void Awake()
